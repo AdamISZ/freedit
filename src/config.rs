@@ -17,6 +17,15 @@ pub struct Config {
     pub(crate) upload_path: String,
     pub(crate) tantivy_path: String,
     pub(crate) proxy: String,
+    // these options are only needed for autct token
+    // requests
+    pub(crate) autct_rpc_port: Option<i32>,
+    pub(crate) autct_rpc_host: Option<String>,
+    pub(crate) autct_version: Option<u8>,
+    pub(crate) autct_keysets: Option<String>,
+    pub(crate) autct_proof_file_str: Option<String>,
+    pub(crate) autct_user_string: Option<String>,
+
 }
 
 impl Config {
@@ -56,6 +65,14 @@ impl Default for Config {
             upload_path: "static/imgs/upload".into(),
             tantivy_path: "tantivy".into(),
             proxy: "".into(),
+            // we re-use defaults from autct::config,
+            // so don't set them here.
+            autct_rpc_port: None,
+            autct_rpc_host: None,
+            autct_keysets: None,
+            autct_proof_file_str: None,
+            autct_user_string: None,
+            autct_version: None,
         }
     }
 }

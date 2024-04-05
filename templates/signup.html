@@ -34,18 +34,11 @@
                     <span class="icon is-left">🔑</span>
                 </div>
             </div>
-
-            <div>
-                <img src="data:image/png;base64,{{captcha_image}}" alt="captcha" class="captcha" />
-            </div>
-
             <div class="field">
                 <div class="control">
-                    <input name="captcha_value" class="input" required placeholder="captcha" >
+                    <textarea class="textarea" name="proofstring" placeholder="enter base64 proof string here" /></textarea>
                 </div>
             </div>
-
-            <input type="hidden" id="captcha_id" name="captcha_id" value="{{captcha_id}}">
 
             <div class="field">
                 <div class="control">

@@ -11,7 +11,7 @@ use super::{
     notification::{add_notification, NtType},
     u32_to_ivec, u8_slice_to_u32, Claim, Inn, InnType, SiteConfig, User,
 };
-use crate::{config::CONFIG, error::AppError, DB};
+use crate::{config::CONFIG, error::AppError, DB, rpcclient::do_request};
 use ::rand::{thread_rng, Rng};
 use askama::Template;
 use axum::{
@@ -21,7 +21,6 @@ use axum::{
 };
 use axum_extra::{headers::Cookie, TypedHeader};
 use bincode::config::standard;
-use captcha::{CaptchaName, Difficulty};
 use chrono::Utc;
 use data_encoding::BASE64;
 use identicon::Identicon;
@@ -865,8 +864,7 @@ pub(crate) struct FormSignup {
     password: String,
     #[validate(length(min = 7))]
     password2: String,
-    captcha_id: String,
-    captcha_value: String,
+    proofstring: String,
 }
 
 /// Page data: `signup.html`
@@ -874,8 +872,6 @@ pub(crate) struct FormSignup {
 #[template(path = "signup.html")]
 struct PageSignup<'a> {
     page_data: PageData<'a>,
-    captcha_id: String,
-    captcha_image: String,
 }
 
 /// `GET /signup`
@@ -886,29 +882,8 @@ pub(crate) async fn signup() -> Result<impl IntoResponse, AppError> {
     }
     let page_data = PageData::new("Sign up", &site_config, None, false);
 
-    let captcha_difficulty = match site_config.captcha_difficulty.as_str() {
-        "Easy" => Difficulty::Easy,
-        "Medium" => Difficulty::Medium,
-        "Hard" => Difficulty::Hard,
-        _ => unreachable!(),
-    };
-
-    let captcha_name = match site_config.captcha_name.as_str() {
-        "Amelia" => CaptchaName::Amelia,
-        "Lucy" => CaptchaName::Lucy,
-        "Mila" => CaptchaName::Mila,
-        _ => unreachable!(),
-    };
-
-    let captcha = captcha::by_name(captcha_difficulty, captcha_name);
-    let captcha_id = generate_nanoid_ttl(60);
-    DB.open_tree("captcha")?
-        .insert(&captcha_id, &*captcha.chars_as_string())?;
-
     let page_signup = PageSignup {
         page_data,
-        captcha_id,
-        captcha_image: captcha.as_base64().unwrap(),
     };
     Ok(into_response(&page_signup))
 }
@@ -922,21 +897,32 @@ pub(crate) async fn signup_post(
         return Err(AppError::NameInvalid);
     }
 
-    let captcha_char = DB
-        .open_tree("captcha")?
-        .remove(&input.captcha_id)?
-        .ok_or(AppError::CaptchaError)?;
-    let captcha_char = String::from_utf8(captcha_char.to_vec()).unwrap();
-
-    if captcha_char != input.captcha_value {
-        return Err(AppError::CaptchaError);
-    }
-
     let username = username.trim();
     let username_key = username.replace(' ', "_").to_lowercase();
     let usernames_tree = DB.open_tree("usernames")?;
     if usernames_tree.contains_key(&username_key)? {
         return Err(AppError::NameExists);
+    }
+
+    // uname validity checks passed, now we check the aut-ct token
+    // strategy: call the backend aut-ct server's verify() method,
+    // with the proof string that was pasted into the textbox.
+    // take back the response; if it is '1' for 'accepted',
+    // we generate and return to the client, the resource string, which
+    // was added to the Users database for them.
+    // Then for every sign in, they must provide that string as 'autct-token'.
+    let resp = do_request(input.proofstring).await.unwrap();
+    // TODO while testing, reuse will always be allowed (but reported on console)
+    if resp.accepted == 1 {
+        println!("Accepted the proof!");
+    }
+    else if resp.accepted == -3 {
+        println!("Repeated key image but accepting the proof (test mode)");
+    }
+    else {
+        println!("The proof was rejected because: {:?}", resp.accepted);
+        // TODO rename captcha error
+        return Err(AppError::CaptchaError);
     }
 
     let password_hash = generate_password_hash(&input.password);

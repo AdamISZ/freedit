@@ -11,6 +11,7 @@ mod app_router;
 mod config;
 mod controller;
 mod error;
+mod rpcclient;
 
 use data_encoding::HEXLOWER;
 use once_cell::sync::Lazy;
