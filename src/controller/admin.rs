@@ -355,8 +355,6 @@ pub(crate) async fn admin_post(
     site_config.site_name = clean_html(&site_config.site_name);
     site_config.domain = clean_html(&site_config.domain);
     site_config.description = clean_html(&site_config.description);
-    site_config.captcha_difficulty = clean_html(&site_config.captcha_difficulty);
-    site_config.captcha_name = clean_html(&site_config.captcha_name);
 
     set_one_with_key(&DB, "__sled__default", "site_config", &site_config)?;
     Ok(Redirect::to("/admin"))
@@ -365,9 +363,9 @@ pub(crate) async fn admin_post(
 impl Default for SiteConfig {
     fn default() -> Self {
         SiteConfig {
-            site_name: "freedit".into(),
+            site_name: "plebfreedit".into(),
             domain: "http://127.0.0.1:3001".into(),
-            description: "a forum powered by rust".into(),
+            description: "a forum for plebs powered by zero knowledge proofs".into(),
             read_only: false,
             inn_mod_max: 5,
             title_max_length: 100,
@@ -377,9 +375,7 @@ impl Default for SiteConfig {
             post_interval: 10,
             comment_interval: 10,
             per_page: 30,
-            captcha_difficulty: "Easy".into(),
-            captcha_name: "Lucy".into(),
-            home_page: 0,
+            home_page: 255,
         }
     }
 }

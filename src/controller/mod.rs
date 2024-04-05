@@ -125,8 +125,10 @@ pub(super) mod message;
 pub(super) mod solo;
 pub(super) mod upload;
 pub(super) mod user;
+pub(super) mod home;
 
 mod fmt;
+
 
 use self::db_utils::{
     get_ids_by_prefix, get_one, incr_id, ivec_to_u32, u32_to_ivec, u8_slice_to_u32,
@@ -154,6 +156,7 @@ use validator::Validate;
 /// | Senior   | ✅        | ✅        |            |
 /// | Admin    | ✅        | ✅        | ✅         |
 
+// TODO: add separate roles for separate token contexts here
 #[derive(Default, Encode, Decode, Serialize, Debug)]
 struct User {
     uid: u32,
@@ -487,8 +490,6 @@ pub(super) struct SiteConfig {
     comment_interval: i64,
     #[validate(range(max = 100))]
     per_page: usize,
-    captcha_difficulty: String,
-    captcha_name: String,
     home_page: u8,
 }
 

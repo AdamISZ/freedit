@@ -1,0 +1,20 @@
+{% extends "layout.html" %} 
+
+{% block content %}
+<div class="">
+This is a simple forum with "Inns" (a bit like subreddits) and "Solo" (for microblogging). It is a fork of <a href="https://github.com/freedit-org/freedit">freedit</a>
+</div>
+<div class="">
+    Plebfreedit exists to demo one extra feature: access to the forum requires ownership of a single utxo greater than 500K sats.
+    <br>
+    You don't need to SPEND the utxo, or hold it, it just needs to exist. Moreover, <emph>which</emph> utxo is yours is kept hidden,
+    using the power of zero knowledge proofs.
+    <br>
+    To generate the proof, use the tool <a href="https://github.com/AdamISZ/aut-ct/releases/latest">here</a>.
+    To do this you'll need a "keyset file", a large file of all the taproot pubkeys in the current utxo set.
+    You can either generate that yourself (which takes a long time, but see instructions <a href="blah">here</a>,
+    or download the latest keyset file (they are generated every 1000 blocks) <a href="bloo">here</a>.)
+    Then paste the text created into the signup page here on this forum.
+    If the proof is accepted, your username and password are permanently accepted.
+</div>
+{% endblock %}

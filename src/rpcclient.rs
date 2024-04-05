@@ -9,39 +9,6 @@ use autct::rpc::*;
 use std::error::Error;
 use base64::prelude::*;
 
-pub async fn do_request_mock(_proof: Vec<u8>) -> Result<RPCProofVerifyResponse, Box<dyn Error>>{
-    let mut autctcfg = AutctConfig::default();
-    autctcfg.mode = Some("request".to_string());
-    if !CONFIG.autct_rpc_port.is_none() {
-        autctcfg.rpc_port = CONFIG.autct_rpc_port.clone();
-    }
-    if !CONFIG.autct_rpc_host.is_none() {
-        autctcfg.rpc_host = CONFIG.autct_rpc_host.clone();
-    }
-    if !CONFIG.autct_version.is_none() {
-        autctcfg.version = CONFIG.autct_version.clone();
-    }
-    if !CONFIG.autct_keysets.is_none() {
-        autctcfg.keysets = CONFIG.autct_keysets.clone().unwrap();
-    }
-    if !CONFIG.autct_proof_file_str.is_none() {
-        autctcfg.proof_file_str = CONFIG.autct_proof_file_str.clone();
-    }
-    if !CONFIG.autct_user_string.is_none() {
-        autctcfg.user_string = CONFIG.autct_user_string.clone();
-    }
-    let resp = RPCProofVerifyResponse {
-        accepted: 1,
-        resource_string: Some("soup for you".to_string()),
-        keyset: autctcfg.keysets,
-        context_label: "test context".to_string(),
-        key_image: None,
-        user_label: autctcfg.user_string.unwrap(),
-        application_label: String::from_utf8(APP_DOMAIN_LABEL.to_vec()).unwrap(),
-    };
-    Ok(resp)
-}
-
 pub async fn do_request(proof: String) -> Result<RPCProofVerifyResponse, Box<dyn Error>>{
     // convert proof string from base64 to binary
     let decoded_proof = BASE64_STANDARD.decode(proof.as_bytes());

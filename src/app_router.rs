@@ -20,6 +20,7 @@ use crate::{
             signup_post, user, user_follow, user_list, user_password_post, user_recovery_code,
             user_setting, user_setting_post,
         },
+        home::homepage,
     },
 };
 use axum::{
@@ -49,7 +50,8 @@ pub async fn router() -> Router {
         );
 
     let router_db = Router::new()
-        .route("/", get(home))
+        .route("/", get(homepage))
+        .route("/home", get(home))
         .route("/signup", get(signup).post(signup_post))
         .route("/signin", get(signin).post(signin_post))
         .route("/signout", get(signout))

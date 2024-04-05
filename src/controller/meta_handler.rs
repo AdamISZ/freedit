@@ -125,7 +125,8 @@ pub(crate) async fn home(
         4 => "/solo/user/0",
         5 => "/solo/user/0?filter=Following",
         6 => "/inn/list",
-        _ => "/inn/0",
+        255 => "/home",
+        _ => "/home",
     };
 
     Ok(Redirect::to(redirect))
