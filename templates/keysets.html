@@ -1,0 +1,28 @@
+{% extends "layout.html" %} 
+
+{% block content %}
+<div class="">
+<b>Getting the public key set for your zero knowledge proof of ownership.</b>
+<br><br>
+</div>
+<div class="">
+    Making proofs (as described on <a href="./proofs">this page</a>) requires you to have the right set of public keys,
+    derived from taproot utxos that existed at a specific block height.
+    <br>
+    On this page there will always be a link to the <emph>latest</emph> utxo keyset file in use by
+    this server. Proofs should be generated with that keyset. They were generated from the utxo snapshot at the specified blockheight.
+    As long as you had a taproot utxo at that specific blockheight for which you own the private key, you can generate the proof.
+    <br><br>
+    <a href="./">Download here</a>
+    <br><br>
+    Trusting the server to generate the keyset file for you is not great! It's just to make the proof
+    of concept easier.
+    While it doesn't violate the
+    security of your private keys, it theoretically makes the anonymity of your key weaker, if the server
+    is malicious.
+    <br>
+    In future you can generate the keyset yourself, with your own bitcoin node. And you can do that today;
+    read <a href="./">here</a> for how to do that; note that it will take 30-40 minutes at minimum, but for
+    the technically capable, it's not too hard, if you have the motivation.
+</div>
+{% endblock %}

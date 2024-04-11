@@ -126,6 +126,8 @@ pub(super) mod solo;
 pub(super) mod upload;
 pub(super) mod user;
 pub(super) mod home;
+pub(super) mod keysets;
+pub(super) mod proofs;
 
 mod fmt;
 

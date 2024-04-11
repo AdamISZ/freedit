@@ -1,0 +1,70 @@
+{% extends "layout.html" %} 
+
+{% block content %}
+<div class="">
+<b>Generating a taproot utxo and proving ownership</b>
+<br><br>
+</div>
+<div class="">
+    This whole process could be completely invisible to the user, but unfortunately the current world
+    of Bitcoin wallets requires a manual process.
+    <br>
+    There are two current Bitcoin wallets in wide usage that actually support taproot wallets:
+    <a href="https://bitcoincore.org">Bitcoin Core</a>, and <a href="https://sparrowwallet.com">Sparrow</a>.
+    <b>Neither</b> support exporting the private key of an individual address.
+    <br>
+    As a result, the <b><a href="https://github.com/AdamISZ/aut-ct">autct</a></b> tool has a method "newkeys",
+    which, as explained there, will generate a single private key, output as WIF, along with the corresponding
+    taproot ("p2tr") address.
+    <br>
+    Here are the steps in detail:
+    <ol>
+    <li>Generate a private key (WIF) and address (bech32m), using this command: <code>target/release/autct -M newkeys -k none</code>.
+        Keep a note of them; you will need them to access your funds!
+        <br>
+        Also, add a flag <code>-n mainnet|signet|regtest</code> if you need to; the default is mainnet.
+    </li>
+    <li> Copy the WIF into a file "privkey" (or any name) in the working directory.
+        Make its read permission user-only.</li>
+    <li><ul>If you are using Core (ignore if using Sparrow)</ul>. Do the following steps using the RPC:
+        <br>
+        <code>bitcoin-cli getdescriptorinfo "tr(WIF)"</code>
+        <br>
+        The output of getdescriptorinfo will show you the checksum in the "checksum" field. Copy it. Then:
+        <br>
+        <code>bitcoin-cli importdescriptors "[{\"desc\":\"tr(WIF)#abcdefg\",\"timestamp\":\"now\",\"label\":\"anything\"}]"</code>
+        where "abcdefg" should be replaced with your checksum. Copy this syntax exactly; the backslashes
+        are escaping each " except the outer ones.
+        <br>
+        You can use e.g. <code>bitcoin-cli getaddressesbylabel anything</code>
+        to sanity check that the address is present in the wallet.
+    </li>
+    <li>Fund the address with any amount above 500K sats.</li>
+    <li>After some delay, find the keyset file from <a href="./keysets">here</a>. It will include your utxo,
+        as long as your utxo was in the blockchain before the starting block of that file.</li>
+    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboard:name-of-keyset-file -i privkey -b 512 --base64-proof true</code>.
+        , where the -i argument should match your private key file.
+    Note that the proving is slow; 30-150 seconds is typical.</li>
+    <li> Take the base64 string printed out from the previous step and use it in the <a href="./signup">signup page</a> here.</li>
+    <li>After you have successfully signed up, sweep the private key into a wallet, either <a href="https://sparrowwallet.com">Sparrow</a> (easier for most users),
+       or <a href="https://bitcoincore.org">Bitcoin Core</a>. See a few notes on this below.</li>
+    </ol>
+    <br>
+    <br>
+    <b>Sweeping the funds</b>
+    <br>
+    If you are using <a href="https://sparrowwallet.com">Sparrow</a>:
+
+    After you've created a new empty wallet, you can go to Tools->Sweep Private Key and then enter the WIF into the first textbox,
+    and choose Script Type : Taproot(P2TR). Then, "Create Transaction" will sweep the funds you earlier used for the proof, into that wallet.
+    <br><br>
+    If you are using <a href="https://bitcoincore.org">Core</a>:
+    In this case, you don't need to sweep, but you might want to move the funds, of course:
+    Simply use <code>bitcoin-cli sendtoaddress destination-address amount "" "" true true 3</code>,
+    or similar (check the help of sendtoaddress; the two "" are empty comment fields, the first true means "subtract
+    fee from amount" (so that you don't get change), the second true means RBF, and the 3 is the target
+    blocks to confirmation for the fee estimator).
+    
+
+</div>
+{% endblock %}

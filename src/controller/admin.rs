@@ -363,7 +363,7 @@ pub(crate) async fn admin_post(
 impl Default for SiteConfig {
     fn default() -> Self {
         SiteConfig {
-            site_name: "plebfreedit".into(),
+            site_name: "hodlboard".into(),
             domain: "http://127.0.0.1:3001".into(),
             description: "a forum for plebs powered by zero knowledge proofs".into(),
             read_only: false,
