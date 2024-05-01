@@ -42,7 +42,7 @@
     <li>Fund the address with any amount above 500K sats.</li>
     <li>After some delay, find the keyset file from <a href="./keysets">here</a>. It will include your utxo,
         as long as your utxo was in the blockchain before the starting block of that file.</li>
-    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboard:name-of-keyset-file -i privkey -b 512 --base64-proof true</code>.
+    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboard:name-of-keyset-file -i privkey -b 1024 --base64-proof true</code>.
         , where the -i argument should match your private key file.
     Note that the proving is slow; 30-150 seconds is typical.</li>
     <li> Take the base64 string printed out from the previous step and use it in the <a href="./signup">signup page</a> here.</li>
