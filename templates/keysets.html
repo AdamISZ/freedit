@@ -13,18 +13,22 @@
     this server. Proofs should be generated with that keyset. They were generated from the utxo snapshot at the specified blockheight.
     As long as you had a taproot utxo at that specific blockheight for which you own the private key, you can generate the proof.
     <br><br>
-    <a href="./">Download mainnet keyset here</a>
+    <a href="./replacethis">Download mainnet keyset here</a>
     <br>
-    <a href="./">Download signet keyset here</a>
+    <a href="./replacethis">Download signet keyset here</a>
     <br><br>
+    <b> Only mainnet is currently working.
+        Note that the minimum amount of sats (500000) and the blockheight of the snapshot are in the file name.</b>
+    <br>
     Trusting the server to generate the keyset file for you is not great! It's just to make the proof
     of concept easier.
     While it doesn't violate the
     security of your private keys, it theoretically makes the anonymity of your key weaker, if the server
     is malicious.
     <br>
-    In future you can generate the keyset yourself, with your own bitcoin node. And you can do that today;
-    read <a href="./">here</a> for how to do that; note that it will take 30-40 minutes at minimum, but for
+    You can generate the keyset yourself, with your own bitcoin node.
+    Read <a href="https://github.com/AdamISZ/aut-ct/blob/master/docs/utxo-keysets.md">here</a> for how to do that;
+    note that it will take 30-40 minutes at minimum, but for
     the technically capable, it's not too hard, if you have the motivation.
 </div>
 {% endblock %}

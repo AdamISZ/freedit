@@ -25,8 +25,9 @@
         Also, add a flag <code>-n mainnet|signet|regtest</code> if you need to; the default is mainnet.
     </li>
     <li> Copy the WIF into a file "privkey" (or any name) in the working directory.
-        Make its read permission user-only.</li>
-    <li><ul>If you are using Core (ignore if using Sparrow)</ul>. Do the following steps using the RPC:
+        Recommendation: make its read permission user-only.</li>
+    <li><ul>If you are using Core (<b>Ignore and go to the next step if using Sparrow</b>)</ul>.
+        Do the following sub-steps using the RPC:
         <br>
         <code>bitcoin-cli getdescriptorinfo "tr(WIF)"</code>
         <br>
@@ -39,12 +40,13 @@
         You can use e.g. <code>bitcoin-cli getaddressesbylabel anything</code>
         to sanity check that the address is present in the wallet.
     </li>
-    <li>Fund the address with any amount above 500K sats.</li>
-    <li>After some delay, find the keyset file from <a href="./keysets">here</a>. It will include your utxo,
+    <li>Fund the p2tr address from the first step with any amount above 500K sats.</li>
+    <li>After confirmation, download the keyset file from <a href="./keysets">here</a>. It will include your utxo,
         as long as your utxo was in the blockchain before the starting block of that file.</li>
-    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboard:name-of-keyset-file -i privkey -b 1024 --base64-proof true</code>.
-        , where the -i argument should match your private key file.
-    Note that the proving is slow; 30-150 seconds is typical.</li>
+    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboardmainnet:name-of-keyset-file -i privkey -b 1024 --base64-proof true</code>.
+        , where the -i argument should match your private key file, and "name-of-keyset-file" should be the (relative or absolute)
+        path to the file you downloaded in the previous step. <b>Don't change the name of the file</b>.
+    Note that the proving is slow; 30-150 seconds is typical currently, though it will be improved later.</li>
     <li> Take the base64 string printed out from the previous step and use it in the <a href="./signup">signup page</a> here.</li>
     <li>After you have successfully signed up, sweep the private key into a wallet, either <a href="https://sparrowwallet.com">Sparrow</a> (easier for most users),
        or <a href="https://bitcoincore.org">Bitcoin Core</a>. See a few notes on this below.</li>
