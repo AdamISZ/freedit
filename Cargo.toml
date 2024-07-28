@@ -50,7 +50,7 @@ unicode-segmentation = "1"
 validator = { version = "0.17.0", features = ["derive"] }
 webpki-roots = "0.26.0"
 whichlang = "0.1.0"
-autct = { git = "https://github.com/AdamISZ/aut-ct", rev = "0173fce8c68d90d14e7544886849c46c9ec22be6"}
+autct = { git = "https://github.com/AdamISZ/aut-ct", rev = "d90e3c8ff1df6736ea3bb1e28eec6ebb82c7d48d"}
 
 [target.'cfg(not(target_os = "windows"))'.dependencies]
 tikv-jemallocator = "0.5"

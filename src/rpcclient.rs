@@ -24,12 +24,8 @@ pub async fn do_request(proof: String) -> Result<RPCProofVerifyResponse, Box<dyn
     if !CONFIG.autct_rpc_host.is_none() {
         autctcfg.rpc_host = CONFIG.autct_rpc_host.clone();
     }
-    if !CONFIG.autct_version.is_none() {
-        autctcfg.version = CONFIG.autct_version.clone();
-    }
     if !CONFIG.autct_keysets.is_none() {
-        println!("Setting keysets: {:?}", CONFIG.autct_keysets);
-        autctcfg.keysets = CONFIG.autct_keysets.clone().unwrap();
+        autctcfg.keysets = CONFIG.autct_keysets.clone();
     }
     if !CONFIG.autct_proof_file_str.is_none() {
         autctcfg.proof_file_str = CONFIG.autct_proof_file_str.clone();

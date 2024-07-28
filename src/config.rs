@@ -21,7 +21,6 @@ pub struct Config {
     // requests
     pub(crate) autct_rpc_port: Option<i32>,
     pub(crate) autct_rpc_host: Option<String>,
-    pub(crate) autct_version: Option<u8>,
     pub(crate) autct_keysets: Option<String>,
     pub(crate) autct_proof_file_str: Option<String>,
     pub(crate) autct_user_string: Option<String>,
@@ -72,7 +71,6 @@ impl Default for Config {
             autct_keysets: None,
             autct_proof_file_str: None,
             autct_user_string: None,
-            autct_version: None,
         }
     }
 }
