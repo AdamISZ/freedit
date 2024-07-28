@@ -19,13 +19,11 @@
     <br>
     Here are the steps in detail:
     <ol>
-    <li>Generate a private key (WIF) and address (bech32m), using this command: <code>target/release/autct -M newkeys -k none</code>.
+    <li>Generate a private key (WIF) in a file, and an address (bech32m), using this command: <code>target/release/autct -M newkeys -k none -i privkey-file</code>.
         Keep a note of them; you will need them to access your funds!
         <br>
         Also, add a flag <code>-n mainnet|signet|regtest</code> if you need to; the default is mainnet.
     </li>
-    <li> Copy the WIF into a file "privkey" (or any name) in the working directory.
-        Recommendation: make its read permission user-only.</li>
     <li><ul>If you are using Core (<b>Ignore and go to the next step if using Sparrow</b>)</ul>.
         Do the following sub-steps using the RPC:
         <br>
@@ -43,10 +41,14 @@
     <li>Fund the p2tr address from the first step with any amount above 500K sats.</li>
     <li>After confirmation, download the keyset file from <a href="./keysets">here</a>. It will include your utxo,
         as long as your utxo was in the blockchain before the starting block of that file.</li>
-    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboardmainnet:name-of-keyset-file -i privkey -b 1024 --base64-proof true</code>.
-        , where the -i argument should match your private key file, and "name-of-keyset-file" should be the (relative or absolute)
-        path to the file you downloaded in the previous step. <b>Don't change the name of the file</b>.
-    Note that the proving is slow; 30-150 seconds is typical currently, though it will be improved later.</li>
+    <li> Start the autct server locally: <code>target/release/autct -M serve -k hodlboardmainnet:name-of-keyset-file -b 1024</code>.
+    Wait until it says <code>Starting server at 127.0.0.1:23333</code>. This can take a few minutes!</li>
+    <li>For the previous, and for the next step, "name-of-keyset-file" must match the name of the file you downloaded from 
+        this site. <b>Don't change the name of the file!</b>
+    </li>
+    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboardmainnet:name-of-keyset-file -i privkey-file -b 1024 --base64-proof true</code>.
+        , where the -i argument should match your private key file.
+    Proving can take 5-20 seconds typically.</li>
     <li> Take the base64 string printed out from the previous step and use it in the <a href="./signup">signup page</a> here.</li>
     <li>After you have successfully signed up, sweep the private key into a wallet, either <a href="https://sparrowwallet.com">Sparrow</a> (easier for most users),
        or <a href="https://bitcoincore.org">Bitcoin Core</a>. See a few notes on this below.</li>
