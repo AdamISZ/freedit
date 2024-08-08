@@ -14,15 +14,21 @@
     <b>Neither</b> support exporting the private key of an individual address.
     <br>
     As a result, the <b><a href="https://github.com/AdamISZ/aut-ct">autct</a></b> tool has a method "newkeys",
-    which, as explained there, will generate a single private key, output as WIF, along with the corresponding
+    which, as explained there, will generate a single private key, along with the corresponding
     taproot ("p2tr") address.
     <br>
     Here are the steps in detail:
     <ol>
-    <li>Generate a private key (WIF) in a file, and an address (bech32m), using this command: <code>target/release/autct -M newkeys -k none -i privkey-file</code>.
-        Keep a note of them; you will need them to access your funds!
+    <li>Generate a private key (WIF) in a file, and an address (bech32m), using these commands:
+        <code>target/release/autct -M serve -k none:testdata/fake-keys6.txt -n mainnet</code>,
+        and then <code>target/release/autct -M newkeys -k none -i privkey-file -n mainnet</code>.
+        The location <code>privkey-file></code> is where an encrypted version of your private key is stored,
+            so don't lose that file, and note down the password you used to create it. Also note down the address of the newly created key.
         <br>
-        Also, add a flag <code>-n mainnet|signet|regtest</code> if you need to; the default is mainnet.
+        The network flag can be changed: <code>-n mainnet|signet|regtest</code>.
+        <br>
+        Next, to export it, you need the unencrypted WIF string for the private key. To get that, do:
+        <code>target/release/autct -M decryptkey -k none -i privkey-file -n mainnet</code>
     </li>
     <li><ul>If you are using Core (<b>Ignore and go to the next step if using Sparrow</b>)</ul>.
         Do the following sub-steps using the RPC:
@@ -41,14 +47,14 @@
     <li>Fund the p2tr address from the first step with any amount above 500K sats.</li>
     <li>After confirmation, download the keyset file from <a href="./keysets">here</a>. It will include your utxo,
         as long as your utxo was in the blockchain before the starting block of that file.</li>
-    <li> Start the autct server locally: <code>target/release/autct -M serve -k hodlboardmainnet:name-of-keyset-file -b 1024</code>.
+    <li> Start the autct server locally: <code>target/release/autct -M serve -k hodlboardmainnet:name-of-keyset-file -n mainnet</code>.
     Wait until it says <code>Starting server at 127.0.0.1:23333</code>. This can take a few minutes!</li>
     <li>For the previous, and for the next step, "name-of-keyset-file" must match the name of the file you downloaded from 
         this site. <b>Don't change the name of the file!</b>
     </li>
-    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboardmainnet:name-of-keyset-file -i privkey-file -b 1024 --base64-proof true</code>.
+    <li>Generate the proof with the command: <code>target/release/autct -M prove -k hodlboardmainnet:name-of-keyset-file -i privkey-file --base64-proof true</code>.
         , where the -i argument should match your private key file.
-    Proving can take 5-20 seconds typically.</li>
+    Proving can take 10-20 seconds typically.</li>
     <li> Take the base64 string printed out from the previous step and use it in the <a href="./signup">signup page</a> here.</li>
     <li>After you have successfully signed up, sweep the private key into a wallet, either <a href="https://sparrowwallet.com">Sparrow</a> (easier for most users),
        or <a href="https://bitcoincore.org">Bitcoin Core</a>. See a few notes on this below.</li>
